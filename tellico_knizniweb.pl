@@ -85,7 +85,8 @@ $ua->agent("Tellico Source Script for knizniweb.cz (private use)/0.1");
 
 $search = $ARGV[0];
 
-$res = $ua->get('http://www.knizniweb.cz/jnp/cz/ctenari/search/advance/index$136474.html?perpage=50&titleUniversalId='.$search);
+#$res = $ua->get('http://www.knizniweb.cz/jnp/cz/ctenari/search/advance/index$136474.html?perpage=50&titleUniversalId='.$search);
+$res = $ua->get('http://www.knizniweb.cz/knihy/vyhledavani/index$400.html?titleName=&authorName=&authorVid=&fulltext=&publisherMark=&universalId='.$search.'&genreVid=');
 
 %fields_map = (
   'Název:' => 'title',
@@ -98,7 +99,8 @@ $res = $ua->get('http://www.knizniweb.cz/jnp/cz/ctenari/search/advance/index$136
 );
 
 if ($res->is_success) {
-  my @hrefs = ($res->content =~ m,"([^"]*katalog/data[^"]*)",g);
+#  my @hrefs = ($res->content =~ m,"([^"]*katalog/data[^"]*)",g);
+  my @hrefs = ($res->content =~ m,"(/knihy[^"]*)",g);
   foreach $href (@hrefs) {
     $hrefs{$href} = 1;
   }
@@ -107,6 +109,7 @@ if ($res->is_success) {
   my $converter = Text::Iconv->new("windows-1250", "utf-8");
   foreach $href (@hrefs) {
     my $res = $ua->get('http://www.knizniweb.cz'.$href);
+print $href,"\n";
     if ($res->is_success) {
       my %fields = ();
       my $html = HTML::TreeBuilder->new_from_content($res->content);

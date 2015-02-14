@@ -92,7 +92,7 @@ sub into_xml(\@) {
 $ua = LWP::UserAgent->new();
 $ua->agent("Tellico Source Script for kosmas.cz (private use)/0.1");
 
-$search = $ARGV[0];
+$search = $ARGV[0] || $ARGV[1];
 
 $res = $ua->get('http://www.kosmas.cz/hledani_vysledek.asp?isbn='.$search);
 
